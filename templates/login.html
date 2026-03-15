@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Pakistan Election</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- HEADER START -->
+    <header>
+        <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto; padding: 0 20px;">
+            <div style="text-align: left;">
+                <span class="emblem">🔐</span>
+                <h1 style="font-size: 1.8rem; margin: 0;">Voter Authentication</h1>
+                <div class="sub-title" style="font-size: 0.8rem;">Secure Access Portal</div>
+            </div>
+            <div style="text-align: right; color: var(--gov-gold);">
+                <div id="live-clock" style="font-family: monospace; font-size: 1.2rem; font-weight: bold;"></div>
+                <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8;">Islamabad Time</div>
+            </div>
+        </div>
+        <div class="nav-bar" style="max-width: 1100px; margin: 15px auto 0; padding: 10px 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+            <a href="/register">Register New Voter</a>
+        </div>
+    </header>
+    <!-- HEADER END -->
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <h2 style="text-align:center; margin-bottom: 20px; color: var(--gov-navy);">Welcome Back</h2>
+            
+            <label>Username</label>
+            <input type="text" name="username" required placeholder="Enter your username">
+            
+            <label>Password</label>
+            <input type="password" name="password" required placeholder="Enter your password">
+            
+            <button type="submit" class="btn">Login Securely</button>
+        </form>
+        
+        <p style="text-align: center; margin-top: 20px;">
+            Don't have an account? <a href="/register" style="color: var(--primary-color); font-weight: bold;">Register here</a>
+        </p>
+    </div>
+
+    <!-- FOOTER START -->
+    
+    <footer>
+        <div style="max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: left; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;">
+            <div>
+                <h5 style="color: var(--gov-gold); margin-bottom: 10px;">Election Commission</h5>
+                <p style="font-size: 0.8rem; line-height: 1.5;">Ensuring free, fair, and transparent elections for the people of Pakistan.</p>
+            </div>
+            <div>
+                <h5 style="color: var(--gov-gold); margin-bottom: 10px;">Quick Links</h5>
+                <ul style="list-style: none; padding: 0; font-size: 0.8rem;">
+                    <li><a href="/" style="color: #94a3b8; text-decoration: none;">Vote Now</a></li>
+                    <li><a href="/results" style="color: #94a3b8; text-decoration: none;">Live Results</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 style="color: var(--gov-gold); margin-bottom: 10px;">Support</h5>
+                <ul style="list-style: none; padding: 0; font-size: 0.8rem;">
+                    <li><a href="#" style="color: #94a3b8; text-decoration: none;">Help Center</a></li>
+                    <li><a href="#" style="color: #94a3b8; text-decoration: none;">Privacy Policy</a></li>
+                    <!-- SECRET ADMIN LINK DISGUISED AS 'SYSTEM INTEGRITY' -->
+                    <li><a href="/admin/voter-list" style="color: #475569; text-decoration: none; font-size: 0.75rem;">System Integrity</a></li>
+                </ul>
+            </div>
+        </div>
+        <p style="font-size: 0.75rem; opacity: 0.6;">&copy; 2024 Election Commission of Pakistan (Simulated). All rights reserved.</p>
+    </footer>
+    <!-- FOOTER END -->
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-PK', { hour12: false });
+            document.getElementById('live-clock').textContent = timeString;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>

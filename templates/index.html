@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cast Your Vote | Pakistan Election</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- HEADER START -->
+    <header>
+        <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto; padding: 0 20px;">
+            <div style="text-align: left;">
+                <span class="emblem">🇵🇰</span>
+                <h1 style="font-size: 1.8rem; margin: 0;">General Election 2024</h1>
+                <div class="sub-title" style="font-size: 0.8rem;">Election Commission of Pakistan</div>
+            </div>
+            <div style="text-align: right; color: var(--gov-gold);">
+                <div id="live-clock" style="font-family: monospace; font-size: 1.2rem; font-weight: bold;"></div>
+                <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8;">Islamabad Time</div>
+            </div>
+        </div>
+        <div class="nav-bar" style="max-width: 1100px; margin: 15px auto 0; padding: 10px 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+            <span style="margin-right: 15px;">Voter: {{ session.username }}</span>
+            <a href="/results">Live Results</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </header>
+    <!-- HEADER END -->
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <h2>Cast Your Vote</h2>
+        <p style="margin-bottom: 20px; font-style: italic;">Instructions: Select one candidate by clicking the radio button next to their name, then press "Submit Ballot".</p>
+
+        {% if voted %}
+            <div class="alert alert-success">
+                <h3>✅ Vote Recorded Successfully</h3>
+                <p>Your vote has been securely cast and counted.</p>
+                <br>
+                <a href="/results" class="btn btn-gold">View Official Results</a>
+            </div>
+        {% else %}
+          <form method="POST">
+    <!-- City Selection with JavaScript -->
+    <div style="margin-bottom: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <div>
+            <label>Select Province:</label>
+            <select id="province-select" onchange="updateCities()" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                <option value="">-- Choose Province --</option>
+                {% for province in cities.keys() %}
+                <option value="{{ province }}">{{ province }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label>Select City:</label>
+            <select id="city-select" name="city" required disabled style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background: #f9f9f9;">
+                <option value="">-- Choose Province First --</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="candidate-grid">
+        {% for c in candidates %}
+        <label class="candidate-card">
+            <input type="radio" name="candidate" value="{{ c['Candidate'] }}" required>
+            <span class="c-party">{{ c['Party'] }}</span>
+            <span class="c-name">{{ c['Candidate'] }}</span>
+        </label>
+        {% endfor %}
+    </div>
+    <br><br>
+    <button type="submit" class="btn">Submit Ballot</button>
+</form>
+
+
+        {% endif %}
+    </div>
+
+          <!-- FOOTER START -->
+    <footer>
+        <div style="max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: left; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;">
+            <div>
+                <h5 style="color: var(--gov-gold); margin-bottom: 10px;">Election Commission</h5>
+                <p style="font-size: 0.8rem; line-height: 1.5;">Ensuring free, fair, and transparent elections for the people of Pakistan.</p>
+            </div>
+            <div>
+                <h5 style="color: var(--gov-gold); margin-bottom: 10px;">Quick Links</h5>
+                <ul style="list-style: none; padding: 0; font-size: 0.8rem;">
+                    <li><a href="/" style="color: #94a3b8; text-decoration: none;">Vote Now</a></li>
+                    <li><a href="/results" style="color: #94a3b8; text-decoration: none;">Live Results</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 style="color: var(--gov-gold); margin-bottom: 10px;">Support</h5>
+                <ul style="list-style: none; padding: 0; font-size: 0.8rem;">
+                    <li><a href="#" style="color: #94a3b8; text-decoration: none;">Help Center</a></li>
+                    <li><a href="#" style="color: #94a3b8; text-decoration: none;">Privacy Policy</a></li>
+                    <!-- SECRET ADMIN LINK DISGUISED AS 'SYSTEM INTEGRITY' -->
+                    <li><a href="/admin/voter-list" style="color: #475569; text-decoration: none; font-size: 0.75rem;">System Integrity</a></li>
+                </ul>
+            </div>
+        </div>
+        <p style="font-size: 0.75rem; opacity: 0.6;">&copy; 2024 Election Commission of Pakistan (Simulated). All rights reserved.</p>
+    </footer>
+    <!-- FOOTER END -->
+
+   <script>
+    const cityData = {
+        {% for province, city_list in cities.items() %}
+        "{{ province }}": [{% for city in city_list %}"{{ city }}"{% if not loop.last %}, {% endif %}{% endfor %}],
+        {% endfor %}
+    };
+
+    function updateCities() {
+        const provinceSelect = document.getElementById('province-select');
+        const citySelect = document.getElementById('city-select');
+        const selectedProvince = provinceSelect.value;
+
+        citySelect.innerHTML = '<option value="">-- Select City --</option>';
+        
+        if (selectedProvince && cityData[selectedProvince]) {
+            citySelect.disabled = false;
+            citySelect.style.background = "#fff";
+            cityData[selectedProvince].forEach(city => {
+                const option = document.createElement('option');
+                option.value = city;
+                option.textContent = city;
+                citySelect.appendChild(option);
+            });
+        } else {
+            citySelect.disabled = true;
+            citySelect.style.background = "#f9f9f9";
+            citySelect.innerHTML = '<option value="">-- Choose Province First --</option>';
+        }
+    }
+</script>
+</body>
+</html>

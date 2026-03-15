@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Manage Admin Access</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>️ Manage Admin Access</h1>
+        <div class="nav-bar">
+            <a href="/admin/voter-list">View Voter List</a>
+            <a href="/admin/back-to-site">Back to Site (Logout)</a>
+        </div>
+    </header>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}{% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+          {% endfor %}{% endif %}
+        {% endwith %}
+
+        <!-- Add New User Form -->
+        <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
+            <h3>Add New Observer</h3>
+            <form method="POST" style="display: flex; gap: 10px; align-items: flex-end; max-width: 600px;">
+                <div style="flex: 1;">
+                    <label>Username</label>
+                    <input type="text" name="username" required placeholder="Observer Name">
+                </div>
+                <div style="flex: 1;">
+                    <label>Password</label>
+                    <input type="password" name="password" required placeholder="Secret Password">
+                </div>
+                <button type="submit" class="btn" style="width: auto; padding: 10px 20px;">Add User</button>
+            </form>
+        </div>
+
+        <!-- List of Authorized Users -->
+        <h3>Authorized Users</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for admin in admins %}
+                <tr>
+                    <td><strong>{{ admin['Username'] }}</strong></td>
+                    <td><span class="badge-party">{{ admin['Role'] }}</span></td>
+                    <td style="color: green;">✅ Active</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

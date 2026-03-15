@@ -1,0 +1,579 @@
+/* ==============================
+   THEME VARIABLES
+============================== */
+
+:root{
+
+--navy:#1e293b;
+--navy-dark:#0f172a;
+
+--blue:#2563eb;
+--blue-soft:#dbeafe;
+
+--gold:#f59e0b;
+
+--bg:#e2e8f0;
+--card:#ffffff;
+
+--text:#1e293b;
+--muted:#64748b;
+
+--border:#cbd5e1;
+
+--danger:#dc2626;
+--success:#16a34a;
+
+--heading:'Georgia','Times New Roman',serif;
+--body:'Segoe UI',sans-serif;
+
+}
+
+/* ==============================
+   GLOBAL
+============================== */
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
+
+body{
+
+font-family:var(--body);
+background:var(--bg);
+color:var(--text);
+
+min-height:100vh;
+display:flex;
+flex-direction:column;
+
+}
+
+/* ==============================
+   HEADER
+============================== */
+
+header{
+
+background:var(--navy-dark);
+color:white;
+
+padding:28px 15px;
+
+text-align:center;
+
+border-bottom:4px solid var(--gold);
+
+position:sticky;
+top:0;
+z-index:1000;
+
+box-shadow:0 6px 18px rgba(0,0,0,0.25);
+
+}
+
+header h1{
+
+font-family:var(--heading);
+font-size:2.3rem;
+letter-spacing:1px;
+
+}
+
+header .sub-title{
+
+color:#cbd5f5;
+font-size:.95rem;
+
+}
+
+header .emblem{
+
+font-size:2rem;
+margin-bottom:8px;
+
+}
+
+/* ==============================
+   NAVIGATION
+============================== */
+
+.nav-bar{
+
+margin-top:18px;
+
+display:flex;
+justify-content:center;
+gap:10px;
+flex-wrap:wrap;
+
+}
+
+.nav-bar a{
+
+color:white;
+
+text-decoration:none;
+
+font-size:.85rem;
+font-weight:600;
+
+padding:6px 14px;
+
+border-radius:6px;
+
+transition:0.25s;
+
+}
+
+.nav-bar a:hover{
+
+background:rgba(255,255,255,0.12);
+
+color:var(--gold);
+
+}
+
+/* ==============================
+   MAIN CONTAINER
+============================== */
+
+.container{
+
+width:95%;
+max-width:1100px;
+
+margin:40px auto;
+
+background:var(--card);
+
+border-radius:12px;
+
+padding:35px;
+
+box-shadow:0 12px 25px rgba(0,0,0,0.1);
+
+border:1px solid var(--border);
+
+}
+
+/* ==============================
+   HEADINGS
+============================== */
+
+h2,h3{
+
+font-family:var(--heading);
+
+color:var(--navy-dark);
+
+margin-bottom:20px;
+
+font-size:1.4rem;
+
+border-bottom:2px solid var(--gold);
+
+padding-bottom:8px;
+
+}
+
+/* ==============================
+   FORMS
+============================== */
+
+form{
+
+max-width:450px;
+
+margin:auto;
+
+background:#f8fafc;
+
+border:1px solid var(--border);
+
+padding:25px;
+
+border-radius:10px;
+
+}
+
+label{
+
+font-weight:600;
+
+margin-bottom:6px;
+
+display:block;
+
+}
+
+input{
+
+width:100%;
+
+padding:10px;
+
+border:1px solid var(--border);
+
+border-radius:6px;
+
+margin-bottom:18px;
+
+}
+
+input:focus{
+
+outline:none;
+
+border-color:var(--blue);
+
+box-shadow:0 0 0 3px rgba(37,99,235,.15);
+
+}
+
+/* ==============================
+   BUTTONS
+============================== */
+
+.btn{
+
+width:100%;
+
+padding:12px;
+
+background:var(--navy);
+
+color:white;
+
+border:none;
+
+border-radius:6px;
+
+font-weight:600;
+
+cursor:pointer;
+
+transition:.25s;
+
+}
+
+.btn:hover{
+
+background:var(--blue);
+
+transform:translateY(-1px);
+
+}
+
+/* ==============================
+   ALERTS
+============================== */
+
+.alert{
+
+padding:14px;
+
+border-left:5px solid;
+
+margin-bottom:20px;
+
+font-weight:600;
+
+}
+
+.alert-success{
+
+background:#f0fdf4;
+color:var(--success);
+border-color:var(--success);
+
+}
+
+.alert-danger{
+
+background:#fef2f2;
+color:var(--danger);
+border-color:var(--danger);
+
+}
+
+/* ==============================
+   CANDIDATE GRID
+============================== */
+
+.candidate-grid{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(260px,1fr));
+
+gap:20px;
+
+margin-top:25px;
+
+}
+
+.candidate-card{
+
+background:white;
+
+border:1px solid var(--border);
+
+border-radius:10px;
+
+padding:20px;
+
+cursor:pointer;
+
+position:relative;
+
+transition:.25s;
+
+}
+
+.candidate-card:hover{
+
+border-color:var(--blue);
+
+transform:translateY(-3px);
+
+box-shadow:0 6px 18px rgba(0,0,0,0.08);
+
+}
+
+.candidate-card input[type=radio]{
+
+position:absolute;
+
+top:18px;
+right:18px;
+
+transform:scale(1.3);
+
+}
+
+.candidate-card:has(input[type=radio]:checked){
+
+border-color:var(--gold);
+
+background:#fff7ed;
+
+}
+
+.c-name{
+
+font-size:1.2rem;
+
+font-weight:700;
+
+margin-top:8px;
+
+}
+
+.c-party{
+
+font-size:.75rem;
+
+background:#e2e8f0;
+
+padding:4px 10px;
+
+border-radius:20px;
+
+display:inline-block;
+
+}
+
+/* ==============================
+   DASHBOARD STATS
+============================== */
+
+.stats-row{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(180px,1fr));
+
+gap:15px;
+
+margin-bottom:30px;
+
+}
+
+.stat-box{
+
+background:var(--navy);
+
+color:white;
+
+padding:18px;
+
+border-radius:10px;
+
+text-align:center;
+
+border-bottom:3px solid var(--gold);
+
+transition:.25s;
+
+}
+
+.stat-box:hover{
+
+transform:translateY(-3px);
+
+}
+
+.stat-number{
+
+font-size:1.5rem;
+
+color:var(--gold);
+
+font-weight:700;
+
+}
+
+.stat-label{
+
+font-size:.75rem;
+
+text-transform:uppercase;
+
+opacity:.9;
+
+}
+
+/* ==============================
+   TABLE
+============================== */
+
+table{
+
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+
+}
+
+th{
+
+background:var(--navy-dark);
+
+color:white;
+
+padding:12px;
+
+font-size:.85rem;
+
+text-transform:uppercase;
+
+}
+
+td{
+
+padding:12px;
+
+border-bottom:1px solid var(--border);
+
+}
+
+tbody tr:nth-child(even){
+
+background:#f8fafc;
+
+}
+
+tbody tr:hover{
+
+background:#e2e8f0;
+
+}
+
+/* ==============================
+   FOOTER
+============================== */
+
+footer{
+
+margin-top:auto;
+
+background:var(--navy-dark);
+
+color:#cbd5e1;
+
+text-align:center;
+
+padding:20px;
+
+font-size:.85rem;
+
+border-top:4px solid var(--gold);
+
+}
+
+/* ==============================
+   MEDIA QUERIES
+============================== */
+
+/* TABLET */
+
+@media(max-width:1024px){
+
+.container{
+padding:30px;
+}
+
+header h1{
+font-size:2rem;
+}
+
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.container{
+padding:25px 20px;
+}
+
+.candidate-grid{
+grid-template-columns:1fr;
+}
+
+.stats-row{
+grid-template-columns:1fr;
+}
+
+}
+
+/* SMALL PHONE */
+
+@media(max-width:480px){
+
+header h1{
+font-size:1.6rem;
+}
+
+.container{
+margin:20px auto;
+padding:20px 15px;
+}
+
+h2,h3{
+font-size:1.2rem;
+}
+
+table{
+font-size:.85rem;
+}
+
+th,td{
+padding:8px;
+}
+
+}

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Official Results | Pakistan Election</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- HEADER START -->
+    <header>
+        <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto; padding: 0 20px;">
+            <div style="text-align: left;">
+                <span class="emblem">📊</span>
+                <h1 style="font-size: 1.8rem; margin: 0;">Election Analysis Report</h1>
+                <div class="sub-title" style="font-size: 0.8rem;">Real-time Statistical Dashboard</div>
+            </div>
+            <div style="text-align: right; color: var(--gov-gold);">
+                <div id="live-clock" style="font-family: monospace; font-size: 1.2rem; font-weight: bold;"></div>
+                <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8;">Islamabad Time</div>
+            </div>
+        </div>
+        <div class="nav-bar" style="max-width: 1100px; margin: 15px auto 0; padding: 10px 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+            <a href="/">Back to Voting</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </header>
+    <!-- HEADER END -->
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <!-- Digital Receipt Display -->
+        {% if session.get('last_receipt') %}
+        <div class="alert alert-success" style="border-left: 5px solid var(--gov-gold); background: #fffbeb; color: #333;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                <div>
+                    <h4 style="margin: 0; color: var(--gov-navy);">✅ Vote Recorded Successfully</h4>
+                    <p style="margin: 5px 0 0 0; font-size: 0.9rem;">
+                        You voted for <strong>{{ session.last_receipt.candidate }}</strong>.
+                    </p>
+                    <p style="margin: 5px 0 0 0; font-size: 0.8rem; color: #666;">
+                        TX ID: <code style="background:#eee; padding:2px 5px; border-radius:3px;">{{ session.last_receipt.tx_id }}</code> | 
+                        Time: {{ session.last_receipt.time }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% set _ = session.pop('last_receipt', None) %}
+        {% endif %}
+
+        <!-- Stats Row -->
+        <div class="stats-row">
+            <div class="stat-box">
+                <span class="stat-number">{{ total_voters }}</span>
+                <span class="stat-label">Total Voters</span>
+            </div>
+            <div class="stat-box leader-box">
+                <span class="stat-number">{{ winner }}</span>
+                <span class="stat-label">★ Leading</span>
+            </div>
+            <div class="stat-box trailer-box">
+                <span class="stat-number">{{ loser }}</span>
+                <span class="stat-label">▼ Trailing</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-number">{{ total_votes }}</span>
+                <span class="stat-label">Votes Cast</span>
+            </div>
+        </div>
+
+                <h2>Visual Analysis</h2>
+        <div class="charts-wrapper">
+            <div class="chart-frame">
+                <h3>Votes by Candidate</h3>
+                <p style="font-size: 0.8rem; color: #666; margin-bottom: 10px;">
+                    <span style="color:#ca8a04">■ Leader</span> 
+                    <span style="color:#991b1b">■ Trailing</span> 
+                    <span style="color:#1e3a8a">■ Others</span>
+                </p>
+                {% if chart_bar %}
+                <!-- FIXED: Added 'data:' at the start -->
+                <img src="data:image/png;base64,{{ chart_bar }}" alt="Bar Chart" style="max-width: 100%; height: auto;">
+                {% else %}
+                <p>Data pending... (Cast a vote to see charts)</p>
+                {% endif %}
+            </div>
+            <div class="chart-frame">
+                <h3>Percentage Share</h3>
+                {% if chart_pie %}
+                <!-- FIXED: Added 'data:' at the start -->
+                <img src="data:image/png;base64,{{ chart_pie }}" alt="Pie Chart" style="max-width: 100%; height: auto;">
+                {% else %}
+                <p>Data pending... (Cast a vote to see charts)</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <h2>Detailed Tabulation</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Candidate Name</th>
+                    <th>Party Affiliation</th>
+                    <th>Total Votes</th>
+                    <th>Share (%)</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in candidates %}
+                <tr>
+                    <td><strong>{{ c['Candidate'] }}</strong></td>
+                    <td><span class="badge-party">{{ c['Party'] }}</span></td>
+                    <td>{{ c['Votes'] }}</td>
+                    <td>{{ "%.2f"|format(c.get('Percentage', 0)) }}%</td>
+                    <td>
+                        {% if c['Candidate'] in winner %}
+                            <span class="status-leading">★ LEADING</span>
+                        {% elif c['Candidate'] in loser and total_votes > 0 %}
+                            <span class="status-trailing">▼ TRAILING</span>
+                        {% else %}
+                            <span style="color: #64748b;">Contending</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+        <!-- FOOTER START -->
+    <footer>
+        <div style="max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: left; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;">
+            <div>
+                <h5 style="color: var(--gov-gold); margin-bottom: 10px;">Election Commission</h5>
+                <p style="font-size: 0.8rem; line-height: 1.5;">Ensuring free, fair, and transparent elections for the people of Pakistan.</p>
+            </div>
+            <div>
+                <h5 style="color: var(--gov-gold); margin-bottom: 10px;">Quick Links</h5>
+                <ul style="list-style: none; padding: 0; font-size: 0.8rem;">
+                    <li><a href="/" style="color: #94a3b8; text-decoration: none;">Vote Now</a></li>
+                    <li><a href="/results" style="color: #94a3b8; text-decoration: none;">Live Results</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 style="color: var(--gov-gold); margin-bottom: 10px;">Support</h5>
+                <ul style="list-style: none; padding: 0; font-size: 0.8rem;">
+                    <li><a href="#" style="color: #94a3b8; text-decoration: none;">Help Center</a></li>
+                    <li><a href="#" style="color: #94a3b8; text-decoration: none;">Privacy Policy</a></li>
+                    <!-- SECRET ADMIN LINK DISGUISED AS 'SYSTEM INTEGRITY' -->
+                    <li><a href="/admin/voter-list" style="color: #475569; text-decoration: none; font-size: 0.75rem;">System Integrity</a></li>
+                </ul>
+            </div>
+        </div>
+        <p style="font-size: 0.75rem; opacity: 0.6;">&copy; 2024 Election Commission of Pakistan (Simulated). All rights reserved.</p>
+    </footer>
+    <!-- FOOTER END -->
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-PK', { hour12: false });
+            document.getElementById('live-clock').textContent = timeString;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>

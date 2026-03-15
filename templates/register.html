@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Pakistan Election</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- HEADER START -->
+    <header>
+        <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto; padding: 0 20px;">
+            <div style="text-align: left;">
+                <span class="emblem">📝</span>
+                <h1 style="font-size: 1.8rem; margin: 0;">Voter Registration</h1>
+                <div class="sub-title" style="font-size: 0.8rem;">Join the Democratic Process</div>
+            </div>
+            <div style="text-align: right; color: var(--gov-gold);">
+                <div id="live-clock" style="font-family: monospace; font-size: 1.2rem; font-weight: bold;"></div>
+                <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8;">Islamabad Time</div>
+            </div>
+        </div>
+        <div class="nav-bar" style="max-width: 1100px; margin: 15px auto 0; padding: 10px 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+            <a href="/login">Already Registered? Login</a>
+        </div>
+    </header>
+    <!-- HEADER END -->
+
+    <div class="container">
+        <!-- Flash Messages (Errors/Success) -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <h2 style="text-align:center; margin-bottom: 20px; color: var(--gov-navy);">Create Account</h2>
+            
+            <label>Username</label>
+            <input type="text" name="username" required placeholder="Choose a unique username">
+            
+            <!-- CNIC Field with Autocomplete OFF to remove yellow line -->
+            <label>CNIC Number</label>
+            <input type="text" 
+                   name="cnic" 
+                   required 
+                   placeholder="e.g. 42101-1234567-1" 
+                   pattern="\d{5}-\d{7}-\d{1}" 
+                   title="Format: 5 digits - 7 digits - 1 digit (e.g., 42101-1234567-1)"
+                   autocomplete="off" 
+                   spellcheck="false">
+            <small style="color: #666; display:block; margin-top:-15px; margin-bottom: 15px; font-size: 0.85rem;">
+                Format: XXXXX-XXXXXXX-X (Must include dashes)
+            </small>
+            
+            <label>Phone Number</label>
+            <input type="text" name="phone" required placeholder="e.g. 0300-1234567">
+            
+            <label>Password</label>
+            <input type="password" name="password" required placeholder="Create a strong password">
+            
+            <button type="submit" class="btn">Register Now</button>
+        </form>
+        
+        <p style="text-align: center; margin-top: 20px; font-size: 0.9rem;">
+            Already have an account? <a href="/login" style="color: var(--primary-color); font-weight: bold;">Login here</a>
+        </p>
+    </div>
+
+    <!-- FOOTER START -->
+    <footer>
+        <div style="max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: left; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;">
+            <div>
+                <h5 style="color: var(--gov-gold); margin-bottom: 10px;">Election Commission</h5>
+                <p style="font-size: 0.8rem; line-height: 1.5;">Register to vote securely using your CNIC.</p>
+            </div>
+            <div>
+                <h5 style="color: var(--gov-gold); margin-bottom: 10px;">Support</h5>
+                <ul style="list-style: none; padding: 0; font-size: 0.8rem;">
+                    <li><a href="#" style="color: #94a3b8; text-decoration: none;">Help Center</a></li>
+                    <li><a href="#" style="color: #94a3b8; text-decoration: none;">Privacy Policy</a></li>
+                    <!-- SECRET ADMIN LINK -->
+                    <li><a href="/admin/voter-list" style="color: #475569; text-decoration: none; font-size: 0.75rem;">System Integrity</a></li>
+                </ul>
+            </div>
+        </div>
+        <p style="font-size: 0.75rem; opacity: 0.6;">&copy; 2024 Election Commission of Pakistan (Simulated). All rights reserved.</p>
+    </footer>
+    <!-- FOOTER END -->
+
+    <!-- Live Clock Script -->
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-PK', { hour12: false });
+            document.getElementById('live-clock').textContent = timeString;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>
