@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Political Parties | Pakistan</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .party-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        .party-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-left: 6px solid #ccc; /* Dynamic Color */
+            display: flex;
+            flex-direction: column;
+        }
+        .party-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Light Header Area */
+        .party-header {
+            padding: 25px;
+            background: #f8fafc; /* Very light grey background */
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .party-icon-box {
+            width: 70px;
+            height: 70px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            flex-shrink: 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .party-title-group h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--gov-navy);
+            line-height: 1.2;
+        }
+        .party-acronym {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.7;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .party-body {
+            padding: 25px;
+            flex-grow: 1;
+        }
+
+        .info-row { 
+            margin-bottom: 15px; 
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            border-bottom: 1px dashed #e2e8f0;
+            padding-bottom: 8px;
+        }
+        .info-row:last-child { border-bottom: none; }
+
+        .info-label { 
+            font-size: 0.75rem; 
+            color: #64748b; 
+            text-transform: uppercase; 
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .info-value { 
+            font-size: 0.95rem; 
+            color: #334155; 
+            font-weight: 500; 
+            text-align: right;
+            max-width: 60%;
+        }
+        
+        .ideology-box {
+            margin-top: 20px;
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #0369a1;
+            line-height: 1.4;
+        }
+        .ideology-label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 4px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto; padding: 0 20px;">
+            <div>
+                <span class="emblem">🚩</span>
+                <h1 style="font-size: 1.8rem; margin: 0;">Political Parties</h1>
+                <div class="sub-title" style="font-size: 0.8rem;">Major Active Parties in Pakistan</div>
+            </div>
+            <div style="text-align: right; color: var(--gov-gold);">
+                <div id="live-clock" style="font-family: monospace; font-size: 1.2rem; font-weight: bold;"></div>
+                <div style="font-size: 0.7rem; text-transform: uppercase;">Islamabad Time</div>
+            </div>
+        </div>
+        <div class="nav-bar" style="max-width: 1100px; margin: 15px auto 0; padding: 10px 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+            <a href="/">Vote Now</a>
+            <a href="/results">Live Results</a>
+            <a href="/history">History</a>
+            <a href="/parties" style="color: var(--gov-gold);">Parties</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="party-grid">
+            {% for party in parties %}
+            <div class="party-card" style="border-left-color: {{ party.color }};">
+                
+                <!-- Light Header with Icon -->
+                <div class="party-header">
+                    <div class="party-icon-box" style="background: {{ party.color }};">
+                        {% if party.symbol == 'Cricket Bat' %}🏏
+                        {% elif party.symbol == 'Lion' %}🦁
+                        {% elif party.symbol == 'Arrow' %}🏹
+                        {% elif party.symbol == 'Book' %}📖
+                        {% elif party.symbol == 'Kite' %}🪁
+                        {% elif party.symbol == 'Balance Scale' %}⚖️
+                        {% elif party.symbol == 'Pen' %}🖊️
+                        {% else %}🚩{% endif %}
+                    </div>
+                    <div class="party-title-group">
+                        <h3>{{ party.name }}</h3>
+                        <span class="party-acronym" style="color: {{ party.color }};">{{ party.acronym }}</span>
+                    </div>
+                </div>
+        <!-- ... existing party grid code ... -->
+       
+
+       
+                <!-- Body Details -->
+                <div class="party-body">
+                    <div class="info-row">
+                        <span class="info-label">Leader</span>
+                        <span class="info-value">{{ party.leader }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Founded</span>
+                        <span class="info-value">{{ party.founded }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Symbol</span>
+                        <span class="info-value">{{ party.symbol }}</span>
+                    </div>
+                    
+                    <div class="ideology-box">
+                        <span class="ideology-label">Core Ideology</span>
+                        {{ party.ideology }}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        
+    </div>
+ <!-- NEW: Official Registry Link Section -->
+        <div style="margin-top: 50px; text-align: center;">
+            <div style="background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 12px; padding: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                <h4 style="margin: 0 0 10px 0; color: var(--gov-navy);">📜 View Complete List of Registered Parties</h4>
+                <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 20px;">
+                    For the full official list of all political parties allotted constituencies by the Election Commission, download the official registry.
+                </p>
+                <a href="https://af.org.pk/images/election/Constituencies/Allotted%20to%20Political%20Parties.pdf" 
+                   target="_blank" 
+                   style="display: inline-block; background: var(--gov-navy); color: rgb(12, 11, 11); padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; transition: background 0.2s;">
+                    📄 Download Official PDF
+                </a>
+                <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 15px;">
+                    Source: Election Commission Records (External Link)
+                </p>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px; color: #64748b; font-size: 0.85rem;">
+            <p>Data represents major parties participating in recent general elections.</p>
+        </div>
+    </div>
+<!-- ... rest of the file ... -->
+    <!-- Footer -->
+    <footer>
+        <div style="max-width: 1100px; margin: 0 auto; text-align: center; padding: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <p style="font-size: 0.75rem; opacity: 0.6;">&copy; 2024 Election Commission of Pakistan (Simulated).</p>
+            <p style="font-size: 0.7rem; opacity: 0.4;"><a href="/admin/voter-list" style="color: #475569; text-decoration: none;">System Integrity</a></p>
+        </div>
+    </footer>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('live-clock').textContent = now.toLocaleTimeString('en-PK', { hour12: false });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>
